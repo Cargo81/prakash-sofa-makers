@@ -1,6 +1,5 @@
 from django.db import models
 
-
 class Service(models.Model):
 
     ICON_CHOICES = [
@@ -10,6 +9,7 @@ class Service(models.Model):
         ("Home", "Home"),
         ("Briefcase", "Briefcase"),
         ("Sparkles", "Sparkles"),
+        ("Test", " Spouse"),
     ]
 
     title = models.CharField(max_length=200)
