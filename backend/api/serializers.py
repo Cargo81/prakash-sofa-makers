@@ -26,10 +26,30 @@ class BeforeAfterSerializer(serializers.ModelSerializer):
 
 
 class GallerySerializer(serializers.ModelSerializer):
-
+    image_url = serializers.SerializerMethodField()
     class Meta:
         model = Gallery
-        fields = "__all__"
+        fields = [
+            "id",
+            "title",
+            "image",
+            "image_url",
+            "description",
+            "created_at",
+        ]
+
+    def get_image_url(self, obj):
+        request = self.context.get("request")
+
+        if obj.image:
+            url = obj.image.url
+
+            if request:
+                return request.build_absolute_uri(url)
+
+            return url
+
+        return None
 
 
 class TestimonialSerializer(serializers.ModelSerializer):
@@ -59,6 +79,17 @@ class ContactInquirySerializer(serializers.ModelSerializer):
             "message",
             "sofa_image",
         ]
+        
+    def validate_sofa_image(self, img):
+     if img and img.size > 5 * 1024 * 1024:
+        raise serializers.ValidationError("Image must be under 5 MB.")
+     return img
+
+def validate_phone(self, value):
+    digits = "".join(c for c in value if c.isdigit())
+    if len(digits) < 10:
+        raise serializers.ValidationError("Enter a valid phone number.")
+    return value
 
 
 class SiteSettingsSerializer(serializers.ModelSerializer):

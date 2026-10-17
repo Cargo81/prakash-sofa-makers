@@ -1,100 +1,55 @@
 from django.contrib import admin
-from .models import Service
-from .models import BeforeAfter
-from .models import Gallery
-from .models import Testimonial
-from .models import FAQ
-from .models import ContactInquiry
-from .models import SiteSettings
+from django.utils.html import format_html
+
+from .models import (
+    Service,
+    BeforeAfter,
+    Gallery,
+    Testimonial,
+    FAQ,
+    ContactInquiry,
+    SiteSettings,
+)
 
 
 @admin.register(Service)
 class ServiceAdmin(admin.ModelAdmin):
-    list_display = (
-        "title",
-        "icon",
-        "price",
-        "is_active",
-        "created_at",
-    )
-
+    list_display = ("title", "icon", "price", "is_active", "created_at")
     list_filter = ("is_active",)
+    search_fields = ("title", "description")
+    list_editable = ("is_active",)
 
-    search_fields = (
-        "title",
-        "description",
-    )
 
 @admin.register(BeforeAfter)
 class BeforeAfterAdmin(admin.ModelAdmin):
+    list_display = ("title", "created_at")
+    search_fields = ("title", "description")
 
-    list_display = (
-        "title",
-        "created_at",
-    )
 
-    search_fields = (
-        "title",
-        "description",
-    )
-    
 @admin.register(Gallery)
 class GalleryAdmin(admin.ModelAdmin):
+    list_display = ("id", "title", "created_at")
+    search_fields = ("title", "description")
 
-    list_display = (
-        "id",
-        "title",
-        "created_at",
-    )
 
-    search_fields = (
-        "title",
-        "description",
-    )
-    
 @admin.register(Testimonial)
 class TestimonialAdmin(admin.ModelAdmin):
+    list_display = ("name", "rating", "is_active", "created_at")
+    list_filter = ("rating", "is_active")
+    search_fields = ("name", "message")
+    list_editable = ("is_active",)
 
-    list_display = (
-        "name",
-        # "location",
-        "rating",
-        "is_active",
-        "created_at",
-    )
 
-    list_filter = (
-        "rating",
-        "is_active",
-    )
-
-    search_fields = (
-        "name",
-        "location",
-        "message",
-    )
-    
 @admin.register(FAQ)
 class FAQAdmin(admin.ModelAdmin):
+    list_display = ("question", "is_active", "created_at")
+    list_filter = ("is_active",)
+    search_fields = ("question", "answer")
+    list_editable = ("is_active",)
 
-    list_display = (
-        "question",
-        "is_active",
-        "created_at",
-    )
 
-    list_filter = (
-        "is_active",
-    )
-
-    search_fields = (
-        "question",
-        "answer",
-    )
-    
 @admin.register(ContactInquiry)
 class ContactInquiryAdmin(admin.ModelAdmin):
-
     list_display = (
         "name",
         "phone",
@@ -103,23 +58,23 @@ class ContactInquiryAdmin(admin.ModelAdmin):
         "is_contacted",
         "created_at",
     )
+    list_filter = ("is_contacted", "created_at")
+    search_fields = ("name", "phone", "email", "service", "message")
+    list_editable = ("is_contacted",)
+    readonly_fields = ("created_at", "image_preview")
 
-    list_filter = (
-        "is_contacted",
-        "created_at",
-    )
+    @admin.display(description="Sofa photo")
+    def image_preview(self, obj):
+        if obj.sofa_image:
+            return format_html(
+                '<img src="{}" style="max-height:200px;border-radius:6px;" />',
+                obj.sofa_image.url,
+            )
+        return "No image"
 
-    search_fields = (
-        "name",
-        "phone",
-        "email",
-        "service",
-        "message",
-    )
-    
+
 @admin.register(SiteSettings)
 class SiteSettingsAdmin(admin.ModelAdmin):
-
     list_display = (
         "business_name",
         "phone",
@@ -128,3 +83,9 @@ class SiteSettingsAdmin(admin.ModelAdmin):
         "customer_rating",
         "satisfaction",
     )
+
+    def has_add_permission(self, request):
+        return not SiteSettings.objects.exists()
+
+    def has_delete_permission(self, request, obj=None):
+        return False

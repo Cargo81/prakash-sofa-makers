@@ -9,7 +9,6 @@ class Service(models.Model):
         ("Home", "Home"),
         ("Briefcase", "Briefcase"),
         ("Sparkles", "Sparkles"),
-        ("Test", " Spouse"),
     ]
 
     title = models.CharField(max_length=200)

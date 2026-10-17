@@ -1,7 +1,8 @@
 from rest_framework import viewsets
-from rest_framework.generics import CreateAPIView, RetrieveAPIView
-from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.exceptions import NotFound
+from rest_framework.generics import CreateAPIView, RetrieveAPIView
+from rest_framework.permissions import AllowAny
+from rest_framework.throttling import AnonRateThrottle
 
 from .models import (
     Service,
@@ -9,7 +10,6 @@ from .models import (
     Gallery,
     Testimonial,
     FAQ,
-    ContactInquiry,
     SiteSettings,
 )
 
@@ -59,18 +59,21 @@ class FAQViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 # =========================================================
-# PUBLIC CONTACT FORM
-# POST ONLY
+# PUBLIC CONTACT FORM (POST ONLY, RATE LIMITED)
 # =========================================================
+
+class ContactRateThrottle(AnonRateThrottle):
+    scope = "contact"
+
 
 class ContactInquiryCreateView(CreateAPIView):
     serializer_class = ContactInquirySerializer
     permission_classes = [AllowAny]
+    throttle_classes = [ContactRateThrottle]
 
 
 # =========================================================
-# PUBLIC SITE SETTINGS
-# GET ONLY
+# PUBLIC SITE SETTINGS (GET ONLY)
 # =========================================================
 
 class SiteSettingsView(RetrieveAPIView):
@@ -78,9 +81,9 @@ class SiteSettingsView(RetrieveAPIView):
     permission_classes = [AllowAny]
 
     def get_object(self):
-        settings = SiteSettings.objects.first()
+        site_settings = SiteSettings.objects.first()
 
-        if not settings:
+        if not site_settings:
             raise NotFound("Site settings not configured.")
 
-        return settings
+        return site_settings
