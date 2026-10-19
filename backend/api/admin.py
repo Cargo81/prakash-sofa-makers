@@ -34,7 +34,7 @@ class GalleryAdmin(admin.ModelAdmin):
 
 @admin.register(Testimonial)
 class TestimonialAdmin(admin.ModelAdmin):
-    list_display = ("name", "rating", "is_active", "created_at")
+    list_display = ("name", "rating", "location", "is_active", "created_at")
     list_filter = ("rating", "is_active")
     search_fields = ("name", "message")
     list_editable = ("is_active",)

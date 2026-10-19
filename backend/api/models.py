@@ -1,4 +1,6 @@
 from django.db import models
+from decimal import Decimal
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 class Service(models.Model):
 
@@ -102,9 +104,14 @@ class Testimonial(models.Model):
     )
 
     message = models.TextField()
+    
+    location = models.CharField(max_length=100, blank=True)
 
-    rating = models.PositiveIntegerField(
-        default=5
+    rating = models.DecimalField(
+        max_digits=2,
+        decimal_places=1,
+        default=Decimal("5.0"),
+        validators=[MinValueValidator(Decimal("1.0")), MaxValueValidator(Decimal("5.0"))],
     )
 
     image = models.ImageField(
@@ -204,6 +211,11 @@ class SiteSettings(models.Model):
     location = models.CharField(
         max_length=200,
         default="Mumbai, Maharashtra"
+    )
+    
+    working_hours = models.CharField(
+        max_length=100,
+        default="Mon - Sun : 9 AM - 9 PM"
     )
 
     projects_completed = models.PositiveIntegerField(
