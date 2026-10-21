@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 
 const API_BASE =
-    import.meta.env.VITE_API_URL || "http://127.0.0.1:8000/api";
+    import.meta.env.VITE_API_URL || "https://prakash-sofa-makers.onrender.com/api";
 
 const MAX_IMAGE_MB = 5;
 

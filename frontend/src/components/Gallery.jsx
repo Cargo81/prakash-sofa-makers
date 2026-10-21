@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 
 
-const BASE_URL = "http://127.0.0.1:8000";
+const BASE_URL = "https://prakash-sofa-makers.onrender.com";
 
 
 export default function Gallery() {

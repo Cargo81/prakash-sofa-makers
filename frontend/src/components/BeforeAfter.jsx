@@ -3,7 +3,7 @@ import { ArrowRight, Sparkles } from "lucide-react";
 import useFetch from "../hooks/useFetch";
 
 const API_BASE =
-  import.meta.env.VITE_API_URL || "http://127.0.0.1:8000/api";
+  import.meta.env.VITE_API_URL || "https://prakash-sofa-makers.onrender.com/api";
 
 // Shown if /site-settings/ is unreachable
 const FALLBACK_SITE = {

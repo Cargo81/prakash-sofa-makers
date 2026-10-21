@@ -30,7 +30,7 @@ export default function Services() {
 
   useEffect(() => {
 
-    fetch("http://127.0.0.1:8000/api/services/")
+    fetch("https://prakash-sofa-makers.onrender.com/api/services/")
 
       .then((response) => {
 
